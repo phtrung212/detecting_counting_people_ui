@@ -1,17 +1,20 @@
 <template>
   <section class="container">
     <div>
-      Home
-      </div>
+      <GridView/>
+    </div>
 
   </section>
 </template>
 
 <script>
 
+  import GridView from '~/components/GridViewCamera.vue'
+  import Slider from '~/components/Slider.vue'
 export default {
   components: {
-
+  Slider,
+  GridView
   }
 }
 </script>
