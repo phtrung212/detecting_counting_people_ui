@@ -11,9 +11,9 @@
       </b-form-group>
     </div>
     <div class="time_selection">
-      <div> <Datepicker  :minimumView="this.selected" placeholder="Select Date"></Datepicker></div>
+      <div> <Datepicker v-model="dateSelected"  :minimumView="this.selected" placeholder="Select Date"></Datepicker></div>
 
-      <div class="button"><b-button variant="outline-primary">Cal</b-button></div>
+      <div class="button"><b-button @click="onCal" variant="outline-primary">Cal</b-button></div>
     </div>
     <div class="report_selection">
       <b-tabs content-class="mt-3">
@@ -54,15 +54,27 @@
 </style>
 
 <script>
-  import LineChart from "../components/lineChart";
+  import LineChart from "../components/chart-line";
   import HeatMap from "../components/heatMap";
   import Datepicker from 'vuejs-datepicker';
+  import moment from 'moment'
   export default {
     name: "reports",
     components: {HeatMap, LineChart, Datepicker},
     data:function () {
       return {
-        selected:'day'
+        selected:'day',
+        dateSelected:null
+      }
+    },
+    methods:{
+      onCal()
+      {
+        let date = this.customFormatter(this.dateSelected)
+        alert(date)
+      },
+      customFormatter(date) {
+        return moment(date).format('YYYY-MM-DD[T]hh:mm:ss[Z]');
       }
     }
   }
