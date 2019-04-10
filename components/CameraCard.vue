@@ -5,7 +5,7 @@
           id = "card"
           :title="name"
           href="/reports"
-          :img-src="'data:image/jpeg;base64,'+imgUrl"
+          img-src="https://bitly.vn/1s50"
           img-alt="Image"
           tag="article"
           style="max-width: 20rem;"
