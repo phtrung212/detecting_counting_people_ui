@@ -1,9 +1,27 @@
 <template>
   <div>
+    <div>
+      <b-navbar type="dark" variant="dark">
+        <b-navbar-nav>
+          <b-nav-item href="/">Home</b-nav-item>
+        </b-navbar-nav>
+        <b-navbar-brand >{{title}}</b-navbar-brand>
+      </b-navbar>
+    </div>
     <nuxt />
   </div>
 </template>
-
+<script>
+  export default {
+    computed: {
+      title () {
+        return this.$route.matched.map((r) => {
+          return (r.components.default.options ? r.components.default.options.pageTitle : r.components.default.pageTitle)
+        })[0]
+      },
+    },
+  }
+</script>
 <style>
 html {
   font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',

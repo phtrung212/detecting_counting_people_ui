@@ -1,32 +1,42 @@
 <template>
   <section class="container">
     <div>
-      <GridView/>
+      <GridView :cameraList="cameras" />
     </div>
 
   </section>
 </template>
 
 <script>
-
+  import axios from 'axios'
   import GridView from '~/components/GridViewCamera.vue'
   import Slider from '~/components/Slider.vue'
 export default {
+  pageTitle: 'Camera List',
+  async asyncData () {
+    let { data } = await axios.get("https://datncountingapi.mybluemix.net/api/cameras?filter[fields][id]=true&filter[fields][name]=true")
+    return { cameras: data }
+  },
+  data: function () {
+    return {
+      isClient:process.browser
+    }
+  },
   components: {
   Slider,
   GridView
+  },
+  mounted : function() {
+    this.$cookies.removeAll()
   }
 }
 </script>
 
 <style>
 .container {
-  margin: 0 auto;
   min-height: 100vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+  margin-top: 10px;
 }
 
 .title {

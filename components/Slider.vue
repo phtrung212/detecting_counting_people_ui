@@ -21,12 +21,13 @@
   Vue.use(SliderPlugin);
 
   export default {
+    name:"Slider",
     data() {
       return {
         ticks: {
         placement: "After",
         // 3 * 3600000 milliseconds = 3 Hour
-        largeStep: 6 * 3600000,
+        largeStep:2* 3600000,
         smallStep: 3600000,
         showSmallTicks: true
       },
@@ -36,9 +37,11 @@
           cssClass: "e-tooltip-cutomization"
       },
       step: 3600000,
-        min: 3600000*16,
-        max: 3600000 * 40,
-        value: [3600000*20, 3600000 * 25],
+        min: 3600000*17,
+        max: 3600000 * 41,
+        value: [3600000*17, 3600000 * 41],
+        startPoint:0,
+        endPoint:23,
       };
     },
     methods: {
@@ -56,10 +59,12 @@
         );
       },
       tooltipChangeHandler: function(args) {
+
         /**
          * toLocaleTimeString is predefined javascript date function, which is used to
          * customize the date in different format
          */
+        console.log('tooltipChangeHandler')
         let custom = { hour: "2-digit", minute: "2-digit" };
         // Splitting the range values from the tooltip using space into an array.
         if (args.text.indexOf("-") !== -1) {
@@ -69,6 +74,12 @@
           // Second part is the second handle value
           let secondPart = totalMiliSeconds[2];
 
+          //get value to send to heatmap
+          this.startPoint=new Date(Number(firstPart)).getHours()
+          this.endPoint= new Date(Number(secondPart)).getHours()
+
+          this.$store.commit('setSliderStart', this.startPoint)
+          this.$store.commit('setSliderEnd', this.endPoint)
           firstPart = new Date(Number(firstPart)).toLocaleTimeString(
             "en-us",
             custom
@@ -79,6 +90,7 @@
           );
           // Assigning our custom text to the tooltip value.
           args.text = firstPart + " - " + secondPart;
+          console.log(this.startPoint, this.endPoint)
         } else {
           args.text =
             "Until " +
@@ -97,9 +109,9 @@
     color: #008cff;
     height: 40px;
     left: 30%;
-    position: absolute;
     top: 40%;
-    width: 50%;
+    width: 90%;
+    margin-left: 50px;
   }
 
   .sliderwrap label {

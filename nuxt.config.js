@@ -33,7 +33,8 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    { src: "~/plugins/chart", ssr: false }
+    { src: "~/plugins/chart", ssr: false },
+     '~plugins/echart',
   ],
 
   /*
@@ -41,6 +42,7 @@ export default {
   */
   modules: [
     // Doc: https://bootstrap-vue.js.org/docs/
+    ['cookie-universal-nuxt',{parseJSON: false}],
     'bootstrap-vue/nuxt',
   ],
 
