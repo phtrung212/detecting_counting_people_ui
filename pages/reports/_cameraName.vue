@@ -153,7 +153,7 @@
             cameraList = this.cameraName
           let [dataLine, dataHeatMap] = await Promise.all([
             axios.get(`https://datncountingapi.mybluemix.net/api/LineCharts/get-reports-day?day=${this.dateSelected.getDate()}&month=${this.dateSelected.getMonth() + 1}&year=${this.dateSelected.getFullYear()}&cameras=${cameraList}`),
-            axios.get(`https://datncountingapi.mybluemix.net/api/heatMaps/get-reports-day?day=${this.dateSelected.getDate()}&month=${this.dateSelected.getMonth() + 1}&year=${this.dateSelected.getFullYear()}`),
+            axios.get(`https://datncountingapi.mybluemix.net/api/heatMaps/get-reports-day?day=${this.dateSelected.getDate()}&month=${this.dateSelected.getMonth() + 1}&year=${this.dateSelected.getFullYear()}&cameras=${cameraList}`),
           ])
           return {dataLine, dataHeatMap}
 
@@ -165,7 +165,7 @@
             cameraList = this.cameraName
           let [dataLine, dataHeatMap] = await Promise.all([
             axios.get(`https://datncountingapi.mybluemix.net/api/LineCharts/get-reports-month?month=${this.dateSelected.getMonth() + 1}&year=${this.dateSelected.getFullYear()}&cameras=${cameraList}`),
-            axios.get(`https://datncountingapi.mybluemix.net/api/heatMaps/get-reports-month?month=${this.dateSelected.getMonth() + 1}&year=${this.dateSelected.getFullYear()}`),
+            axios.get(`https://datncountingapi.mybluemix.net/api/heatMaps/get-reports-month?month=${this.dateSelected.getMonth() + 1}&year=${this.dateSelected.getFullYear()}&cameras=${cameraList}`),
           ])
           return {dataLine, dataHeatMap}
         } else if (this.sort == 'year') {
@@ -175,7 +175,7 @@
           else
             cameraList = this.cameraName
           let [dataLine] = await Promise.all([
-            axios.get(`https://datncountingapi.mybluemix.net/api/LineCharts/get-reports-year?year=${this.dateSelected.getFullYear()}&cameras=${cameraList}`),
+            axios.get(`https://datncountingapi.mybluemix.net/api/LineCharts/get-reports-year?year=${this.dateSelected.getFullYear()}&cameras=${cameraList}&cameras=${cameraList}`),
           ])
           return dataLine
         }
