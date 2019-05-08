@@ -1,35 +1,56 @@
 <template>
   <div>
-    <div class="title" v-if="cameraSelected">
-      Report for {{cameraList}}
-    </div>
-    <div class="title" v-else>
-      Report for {{$route.params.cameraName}}
-    </div>
-    <div class="time_options">
-      <b-form-group label="Choose type of time below">
-        <b-form-radio value="day" v-model="selected" name="some-radios" inline>Day</b-form-radio>
-        <b-form-radio value="month" v-model="selected" name="some-radios" inline>Month</b-form-radio>
-        <b-form-radio value="year" v-model="selected" name="some-radios" inline>Year</b-form-radio>
-      </b-form-group>
-    </div>
-    <div class="time_selection">
-      <div>
-        <Datepicker v-model="dateSelected" :minimumView="this.selected" :highlighted="highlighted" placeholder="Select Date"></Datepicker>
+    <div class="head">
+      <div class="infor">
+        <div v-if="cameraSelected">
+          <span class="label">Camera report: </span> {{cameraList}}
+        </div>
+        <div v-else>
+          <span class="label">Camera report: </span> {{$route.params.cameraName}}
+        </div>
+        <div><span class="label">Lasted day process: </span></div>
       </div>
 
-      <div class="button">
-        <b-button @click="onCal" variant="outline-primary">Cal</b-button>
+
+      <div class="time">
+        <div class="time_options">
+          <b-form-group label="Choose type of time below">
+            <b-form-radio value="day" v-model="selected" name="some-radios" inline>Day</b-form-radio>
+            <b-form-radio value="month" v-model="selected" name="some-radios" inline>Month</b-form-radio>
+            <b-form-radio value="year" v-model="selected" name="some-radios" inline>Year</b-form-radio>
+          </b-form-group>
+        </div>
+        <div class="time_selection">
+          <div>
+            <Datepicker v-model="dateSelected" :minimumView="this.selected" :highlighted="highlighted"
+                        placeholder="Select Date"></Datepicker>
+          </div>
+
+          <div class="button">
+            <b-button size="sm" @click="onCal" variant="primary">Cal</b-button>
+          </div>
+        </div>
       </div>
+
     </div>
+
     <div class="report_selection">
       <b-tabs content-class="mt-3">
         <b-tab title="Heat map" active>
+          <div v-if="dateCal && !this.dataHeatMap" class="loading">
+            <div id="text">
+              <Loading></Loading>
+              <p>Loading</p>
+            </div>
+          </div>
+          <p class="noti" v-if="!dateCal">Please select date to view report</p>
+
           <HeatMap :mode="sort" v-if="this.dataHeatMap!=null" :dataH="this.dataHeatMap"
                    :key="componentKey && (sliderStart || sliderEnd)" :start-hour="sliderStart" :end-hour="sliderEnd"/>
-          <Slider v-if="sort=='day'"/>
+          <Slider v-if="sort=='day' && this.dataHeatMap!=null"/>
         </b-tab>
         <b-tab title="Line chart">
+          <p class="noti" v-if="!dateCal">Please select date to view report</p>
           <LineChart v-if="this.dataLineChart!=null" :dataReport="this.dataLineChart" :day="dateCal" :sort="sort"
                      :key="componentKey"/>
         </b-tab>
@@ -38,10 +59,47 @@
   </div>
 </template>
 <style>
+  .head {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .label
+  {
+    font-weight: bold;
+    color: black;
+  }
+  .infor
+  {
+    color: blue;
+    font-weight: bold;
+  }
+  #text {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+  }
+
+  .loading {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    color: blue;
+  }
+
+  .noti {
+    text-align: center;
+    font-size: 20px;
+    color: #ff3b2b;
+    font-weight: bold;
+  }
+
   .button {
     margin-left: 10px;
   }
-
+  button{
+    width:60px;
+  }
   .time_selection {
     clear: both;
     float: right;
@@ -55,11 +113,6 @@
     margin-right: 50px;
   }
 
-  .report_selection {
-    margin-top: 120px;
-
-  }
-
   .title {
     font-size: 30px;
     text-align: center;
@@ -71,6 +124,7 @@
   import HeatMap from "../../components/heatMap";
   import Slider from "../../components/Slider";
   import Datepicker from 'vuejs-datepicker';
+  import Loading from "../../components/loading"
   import moment from 'moment'
   import axios from 'axios'
 
@@ -78,14 +132,16 @@
   export default {
     name: "reports",
     pageTitle: 'Report',
-    components: {HeatMap, LineChart, Datepicker, Slider},
+    components: {HeatMap, LineChart, Datepicker, Slider, Loading},
     async asyncData(context) {
-      console.log('cookie',context.app.$cookies.get('cameras'))
-      let cameras=context.app.$cookies.get('cameras')?context.app.$cookies.get('cameras'):context.params.cameraName
-      let dateList= await axios.get(`https://datncountingapi.mybluemix.net/api/LineCharts/check-day-processed?cameras=${cameras}`)
+      console.log('cookie', context.app.$cookies.get('cameras'))
+      let cameras = context.app.$cookies.get('cameras') ? context.app.$cookies.get('cameras') : context.params.cameraName
+      let dateList = await axios.get(`https://datncountingapi.mybluemix.net/api/LineCharts/check-day-processed?cameras=${cameras}`)
 
-      return {cameraName: context.params.cameraName,
-      days:dateList.data}
+      return {
+        cameraName: context.params.cameraName,
+        days: dateList.data
+      }
     },
     data: function () {
       return {
@@ -100,12 +156,10 @@
       }
     },
     computed: {
-      highlighted ()
-      {
-        console.log('days',this.days.data)
-       return {
-         dates:this.days.data.map((item) => new Date(parseInt(item.substr(0,4)),parseInt(item.substr(5,2))-1,parseInt(item.substr(8,2))))
-       }
+      highlighted() {
+        return {
+          dates: this.days.data.map((item) => new Date(parseInt(item.substr(0, 4)), parseInt(item.substr(5, 2)) - 1, parseInt(item.substr(8, 2))))
+        }
 
       },
       sliderStart() {
@@ -122,7 +176,7 @@
         let cameraArray = JSON.parse(this.cameraSelected)
         let cameraList = ''
         for (let i = 0; i < cameraArray.length - 1; i++) {
-          cameraList += cameraArray[i] + ','
+          cameraList += cameraArray[i] + '|'
         }
         cameraList += cameraArray[cameraArray.length - 1]
         return cameraList

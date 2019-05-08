@@ -5,7 +5,7 @@
         <b-navbar-nav>
           <b-nav-item href="/">Home</b-nav-item>
         </b-navbar-nav>
-        <b-navbar-brand >{{title}}</b-navbar-brand>
+
       </b-navbar>
     </div>
     <nuxt />

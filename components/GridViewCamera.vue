@@ -1,11 +1,23 @@
 <template>
   <div>
+    <div class="head">
+      <div class="sub-head">
+        <p>CAMERA LIST</p>
+        <hr>
+        <div class="head-tool">
+          Selection mode:
+          <b-button v-b-tooltip.hover title="Click here to change selection mode" v-if="mode==1" @click="changeMode" variant="primary">Single</b-button>
+          <b-button v-b-tooltip.hover title="Click here to change selection mode" v-else @click="changeMode" variant="primary">Multiple</b-button>
+        </div>
+      </div>
+
+    </div>
     <div class="bv-example-row">
       <b-form-group>
         <b-form-checkbox-group id="checkbox-group-2" v-model="selected" name="flavour-2" @change="handleChange">
           <div class="cell" v-for="camera in cameraList" :key="camera.id">
-            <b-form-checkbox :value="camera.name"></b-form-checkbox>
-            <Camera :name="camera.name" :imgUrl="camera.image"/>
+            <b-form-checkbox v-if="mode==2" :value="camera.name"></b-form-checkbox>
+            <Camera :name="camera.name" :imgUrl="camera.image" :multi-cam="multiCam" :cameras="selected"/>
 
           </div>
         </b-form-checkbox-group>
@@ -21,13 +33,31 @@
     name: "GridViewCamera",
     data() {
       return {
-        selected: []
+        mode:1,
+        selected: [],
+        multiCam:false,
       }
     },
+    computed: {
+    },
+
     methods: {
+      changeMode(){
+          if (this.mode==1)
+            this.mode=2
+        else
+          this.mode=1
+      },
       handleChange(checked) {
         if (checked.length > 0)
+        {
           this.$store.commit('setSelectedCamera', true)
+          this.multiCam=true
+          this.selected=checked
+        }else {
+          this.multiCam=false
+        }
+
         this.$cookies.set('cameras', checked, {
           path: '/',
           maxAge: 60 * 60 * 24 * 7
@@ -50,6 +80,28 @@
   }
 
   .cell {
-    margin-left: 10px;
+    margin-left: 50px;
+  }
+  .head{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    flex-direction: row;
+    margin-bottom: 20px;
+  }
+  .sub-head{
+    font-weight: bold;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    width:100%;
+  }
+  .head-tool{
+    align-self: flex-end;
+  }
+  hr {
+    display: block;
+    margin-top: 0;
+    border-width: 2px;
   }
 </style>

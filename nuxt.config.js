@@ -43,9 +43,12 @@ export default {
   modules: [
     // Doc: https://bootstrap-vue.js.org/docs/
     ['cookie-universal-nuxt',{parseJSON: false}],
-    'bootstrap-vue/nuxt',
+    'bootstrap-vue/nuxt','nuxt-basic-auth-module'
   ],
-
+  basic: {
+    name: 'admin',
+    pass: 'admin',
+  },
   /*
   ** Build configuration
   */

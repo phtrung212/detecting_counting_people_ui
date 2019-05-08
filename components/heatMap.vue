@@ -1,6 +1,9 @@
 <template>
   <div id="echarts">
-    <div id="heatMap"></div>
+    <div id="heatMap">
+      <img src="https://bitly.vn/1s50"/>
+    </div>
+
   </div>
 </template>
 <script type="text/javascript">
@@ -42,13 +45,17 @@
           value=[]
         if(mode == 'day')
         {
-          for (let i=startHour;i<endHourEdit;i++)
+          for (let j=0;j<(dataH.x[startHour]).length;j++)
           {
-            for (let j=0;j<(dataH.x[i]).length;j++)
+            x.push(parseInt(dataH.x[startHour][j]))
+            y.push(parseInt(dataH.y[startHour][j]))
+            value.push(parseInt(dataH.value[startHour][j]))
+          }
+          for (let i=startHour+1;i<endHourEdit;i++)
+          {
+            for(let j=0;j<(dataH.x[startHour]).length;j++)
             {
-              x.push(parseInt(dataH.x[i][j]))
-              y.push(parseInt(dataH.y[i][j]))
-              value.push(parseInt(dataH.value[i][j]))
+              value[j] += parseInt(dataH.value[i][j])
             }
 
           }
@@ -69,6 +76,7 @@
           points.push(point);
         }
         console.log('points',points)
+        console.log('Maxxxxxxxxxx',max)
         // minimal heatmap instance configuration
         var heatmapInstance = HeatMap.create({
           // only container is required, the res```t will be defaults
@@ -109,13 +117,16 @@
 <style scoped lang="less">
   #echarts
   {
+      display: flex;
+      justify-content: center;
   }
   #heatMap{
-    width: 600px;
-    height: 300px;
+    width: 928px;
+    height: 576px;
     margin-left: auto;
     margin-right: auto;
     float: left;
   }
+
 </style>
 ---------------------
