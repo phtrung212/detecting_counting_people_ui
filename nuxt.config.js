@@ -1,5 +1,5 @@
 import pkg from './package'
-
+const webpack = require('webpack')
 export default {
   mode: 'universal',
 
@@ -17,7 +17,9 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
-
+  router: {
+    middleware: 'authentication'
+  },
   /*
   ** Customize the progress-bar color
   */
@@ -43,12 +45,8 @@ export default {
   modules: [
     // Doc: https://bootstrap-vue.js.org/docs/
     ['cookie-universal-nuxt',{parseJSON: false}],
-    'bootstrap-vue/nuxt','nuxt-basic-auth-module'
+    'bootstrap-vue/nuxt'
   ],
-  basic: {
-    name: 'admin',
-    pass: 'admin',
-  },
   /*
   ** Build configuration
   */
@@ -57,6 +55,15 @@ export default {
     ** You can extend webpack config here
     */
     extend(config, ctx) {
+      config.plugins.push(
+        new webpack.EnvironmentPlugin([
+          'APIKEY',
+          'AUTHDOMAIN',
+          'DATABASEURL',
+          'PROJECTID',
+          'STORAGEBUCKET',
+          'MESSAGINGSENDERID'
+        ]))
     }
   }
 }

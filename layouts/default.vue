@@ -2,24 +2,55 @@
   <div>
     <div>
       <b-navbar type="dark" variant="dark">
-        <b-navbar-nav>
+        <b-navbar-nav >
           <b-nav-item href="/">Home</b-nav-item>
-        </b-navbar-nav>
 
+        </b-navbar-nav>
+        <b-navbar-nav class="ml-auto">
+          <b-nav-item-dropdown right>
+            <!-- Using 'button-content' slot -->
+            <template slot="button-content"><em>{{getUser}}</em></template>
+            <b-dropdown-item href="#">Profile</b-dropdown-item>
+            <b-dropdown-item-button @click="doLogout" href="#">Sign Out</b-dropdown-item-button>
+          </b-nav-item-dropdown>
+        </b-navbar-nav>
       </b-navbar>
     </div>
     <nuxt />
   </div>
 </template>
 <script>
+  import BNavbarNav from "bootstrap-vue/src/components/navbar/navbar-nav";
+  import { mapActions } from 'vuex'
   export default {
+    components: {BNavbarNav},
     computed: {
       title () {
         return this.$route.matched.map((r) => {
           return (r.components.default.options ? r.components.default.options.pageTitle : r.components.default.pageTitle)
         })[0]
       },
+      getUser(){
+        let user=""
+        if(this.$store.state.user)
+          user=this.$store.state.user.email
+        return user
+      },
     },
+    methods:{
+      ...mapActions([
+        'logout'
+      ]),
+      doLogout () {
+        console.log('logout')
+        this.logout()
+          .then(() => {
+            this.$router.push('/login')
+          })
+          .catch((err) => console.log(err))
+      }
+    }
+
   }
 </script>
 <style>
