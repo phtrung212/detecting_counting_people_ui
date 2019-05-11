@@ -23,7 +23,7 @@
     "cookie-universal-nuxt": "^2.0.14",
     "cross-env": "^5.2.0",
     "echarts": "^4.2.1",
-    "firebase": "^6.0.1",
+    "firebase": "^6.0.2",
     "hchs-vue-charts": "^1.2.8",
     "heatmap.js": "^2.0.5",
     "moment": "^2.24.0",
@@ -31,7 +31,7 @@
     "nuxt-basic-auth-module": "^1.2.0",
     "vue-chartjs": "^3.4.2",
     "vuejs-datepicker": "^1.5.4",
-    "webpack": "^4.30.0"
+    "webpack": "^4.31.0"
   },
   "devDependencies": {
     "less": "^3.9.0",

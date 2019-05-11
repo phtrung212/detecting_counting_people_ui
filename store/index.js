@@ -58,7 +58,8 @@ export const actions = {
           resolve()
         })
     })
-  }
+  },
+
 }
 export const strict = false
 

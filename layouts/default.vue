@@ -6,7 +6,7 @@
           <b-nav-item href="/">Home</b-nav-item>
 
         </b-navbar-nav>
-        <b-navbar-nav class="ml-auto">
+        <b-navbar-nav v-if="getUser" class="ml-auto">
           <b-nav-item-dropdown right>
             <!-- Using 'button-content' slot -->
             <template slot="button-content"><em>{{getUser}}</em></template>
@@ -45,6 +45,7 @@
         console.log('logout')
         this.logout()
           .then(() => {
+            this.$cookies.remove('isAuth')
             this.$router.push('/login')
           })
           .catch((err) => console.log(err))

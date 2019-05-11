@@ -11,6 +11,8 @@
   import axios from 'axios'
   import GridView from '~/components/GridViewCamera.vue'
   import Slider from '~/components/Slider.vue'
+  import { mapActions,mapMutations } from 'vuex'
+  import firebase from '../plugins/firebase'
 export default {
   pageTitle: 'Camera List',
   async asyncData () {
@@ -26,8 +28,17 @@ export default {
   Slider,
   GridView
   },
-  mounted : function() {
-    this.$cookies.removeAll()
+  mounted : async function() {
+    /*let user = await new Promise((resolve, reject) => {
+      firebase.auth().onAuthStateChanged((user) => resolve(user))
+    })
+    this.setUser(user) // setUser is mapped action from vuex*/
+    this.$cookies.remove('cameras')
+  },
+  methods:{
+    ...mapMutations([
+      'setUser'
+    ]),
   }
 }
 </script>
