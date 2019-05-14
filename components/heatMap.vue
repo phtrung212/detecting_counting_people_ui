@@ -1,7 +1,8 @@
 <template>
   <div id="echarts">
     <div id="heatMap">
-      <img src="https://bitly.vn/1s50"/>
+      <img v-if="isEmptyData==false" src="https://bitly.vn/1s50"/>
+      <p v-if="isEmptyData===true">This day has not processed yet</p>
     </div>
 
   </div>
@@ -21,6 +22,7 @@
     },
     data () {
       return {
+        isEmptyData:true
       }
     },
     computed:{
@@ -57,7 +59,6 @@
             {
               value[j] += parseInt(dataH.value[i][j])
             }
-
           }
         }else
         {
@@ -67,6 +68,8 @@
         }
 
         for (let i=0;i<x.length;i++) {
+          if(value[i]!==0 && this.isEmptyData===true)
+            this.isEmptyData=false
           max = Math.max(max, value[i]);
           var point = {
             x: parseInt(x[i]),
@@ -77,6 +80,7 @@
         }
         console.log('points',points)
         console.log('Maxxxxxxxxxx',max)
+        console.log('IsEmpty',this.isEmptyData)
         // minimal heatmap instance configuration
         var heatmapInstance = HeatMap.create({
           // only container is required, the res```t will be defaults
@@ -126,6 +130,13 @@
     margin-left: auto;
     margin-right: auto;
     float: left;
+  }
+  p{
+    width:100%;
+    text-align: center;
+    font-size: 20px;
+    color: #ff3b2b;
+    font-weight: bold;
   }
 
 </style>

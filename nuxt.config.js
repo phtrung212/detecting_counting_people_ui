@@ -55,15 +55,6 @@ export default {
     ** You can extend webpack config here
     */
     extend(config, ctx) {
-      config.plugins.push(
-        new webpack.EnvironmentPlugin([
-          'APIKEY',
-          'AUTHDOMAIN',
-          'DATABASEURL',
-          'PROJECTID',
-          'STORAGEBUCKET',
-          'MESSAGINGSENDERID'
-        ]))
     }
   }
 }

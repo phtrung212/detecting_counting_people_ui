@@ -191,6 +191,7 @@
     },
     methods: {
       async onCal() {
+        this.dataHeatMap=null
         this.dataLineChart = null
         this.sort = this.selected
         this.dateCal = this.customFormatter(this.dateSelected)
