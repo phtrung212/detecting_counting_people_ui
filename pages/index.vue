@@ -13,11 +13,14 @@
   import Slider from '~/components/Slider.vue'
   import { mapActions,mapMutations } from 'vuex'
   import firebase from '../plugins/firebase'
+  const api="https://datncountingapi.mybluemix.net/api/"
+  const _api="http://localhost:3001/api/"
+
 export default {
   pageTitle: 'Camera List',
   async asyncData () {
-    let { data } = await axios.get("https://datncountingapi.mybluemix.net/api/cameras?filter[fields][id]=true&filter[fields][name]=true")
-    return { cameras: data }
+    let { data } = await axios.get(`${api}cameras?filter[fields][id]=true&filter[fields][name]=true`)
+    return { cameras: data}
   },
   data: function () {
     return {

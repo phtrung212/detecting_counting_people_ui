@@ -17,7 +17,7 @@
         <b-form-checkbox-group id="checkbox-group-2" v-model="selected" name="flavour-2" @change="handleChange">
           <div class="cell" v-for="camera in cameraList" :key="camera.id">
             <b-form-checkbox v-if="mode==2" :value="camera.name"></b-form-checkbox>
-            <Camera :name="camera.name" :imgUrl="camera.image" :multi-cam="multiCam" :cameras="selected"/>
+            <Camera :name="camera.name" :multi-cam="multiCam" :cameras="selected"/>
 
           </div>
         </b-form-checkbox-group>

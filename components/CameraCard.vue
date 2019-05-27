@@ -5,7 +5,7 @@
         id="card"
         :title="name"
         href="/reports"
-        img-src="https://bitly.vn/1s50"
+        :img-src="url"
         img-alt="Image"
         tag="article"
         style="max-width: 20rem;"
@@ -20,9 +20,23 @@
 </template>
 
 <script>
+  import axios from 'axios'
+  const api="https://datncountingapi.mybluemix.net/"
 export default {
   name: "Camera.vue",
-  props: ["name", "imgUrl", "multiCam", "cameras"],
+  props: ["name", "multiCam", "cameras"],
+  data () {
+    return {
+      url:''
+    }
+  },
+  async mounted (){
+    let res = await axios.get(`${api}get-file?filename=${this.name}.png`)
+    if (res.data.url)
+      this.url=res.data.url
+    else
+      this.url='/no-img.jpg'
+  },
   computed: {
     isSelected() {
       let selected = true;
