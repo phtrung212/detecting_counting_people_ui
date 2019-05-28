@@ -30,6 +30,7 @@
     "nuxt": "^2.4.0",
     "nuxt-basic-auth-module": "^1.2.0",
     "vue-chartjs": "^3.4.2",
+    "vuefire": "^2.0.0",
     "vuejs-datepicker": "^1.5.4",
     "webpack": "^4.31.0"
   },

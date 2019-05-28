@@ -1,65 +1,81 @@
-import firebase from '../plugins/firebase'
+import firebase from "../plugins/firebase";
 
 export const state = () => ({
-  sliderStart:0,
-  sliderEnd:0,
-  heatData:null,
-  selectedCamera:false,
-  user: null
-})
+  sliderStart: 0,
+  sliderEnd: 0,
+  heatData: null,
+  selectedCamera: false,
+  user: null,
+  realtimeIn: 0,
+  realtimeOut:0
+});
 export const mutations = {
-  setUser (state, payload) {
-    state.user = payload
+  setUser(state, payload) {
+    state.user = payload;
   },
   setSliderStart: function(state, start) {
-    state.sliderStart = start
+    state.sliderStart = start;
   },
   setSliderEnd: function(state, end) {
-    state.sliderEnd = end
+    state.sliderEnd = end;
   },
   setHeatData: function(state, data) {
-    state.heatData = data
+    state.heatData = data;
   },
   setSelectedCamera: function(state, data) {
-    state.selectedCamera = data
+    state.selectedCamera = data;
   },
-}
+  setRealtimeIn: function (state,data) {
+    state.realtimeIn=data
+  },
+  setRealtimeOut: function (state,data) {
+    state.realtimeOut=data
+  }
+};
 
 export const getters = {
-  isAuthenticated (state) {
-    return !!state.user
+  isAuthenticated(state) {
+    return !!state.user;
   },
   getSliderStart: state => {
-    return state.sliderStartS
+    return state.sliderStartS;
   },
   getSliderEnd: state => {
-    return state.sliderEnd
+    return state.sliderEnd;
   },
   getHeatData: state => {
-    return state.heatData
+    return state.heatData;
   },
   getSelectedCamera: state => {
-    return state.selectedCamera
+    return state.selectedCamera;
   },
-}
+  getRealTimeIn: state => {
+    return state.realtimeIn;
+  },
+  getRealTimeOut: state => {
+    return state.realtimeOut;
+  },
+};
 export const actions = {
-  async login ({ commit },{email, password}) {
+  async login({ commit }, { email, password }) {
     return new Promise((resolve, reject) => {
-      firebase.auth().signInWithEmailAndPassword(email, password)
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
         .then(() => resolve())
-        .catch((err) => reject(err))
-    })
+        .catch(err => reject(err));
+    });
   },
-  logout ({ commit }) {
+  logout({ commit }) {
     return new Promise((resolve, reject) => {
-      firebase.auth().signOut()
+      firebase
+        .auth()
+        .signOut()
         .then(() => {
-          commit('setUser', null)
-          resolve()
-        })
-    })
-  },
-
-}
-export const strict = false
-
+          commit("setUser", null);
+          resolve();
+        });
+    });
+  }
+};
+export const strict = false;
