@@ -138,7 +138,7 @@
     async asyncData(context) {
       console.log('cookie', context.app.$cookies.get('cameras'))
       let cameras = context.app.$cookies.get('cameras') ? context.app.$cookies.get('cameras') : context.params.cameraName
-      let dateList = await axios.get(`${{api}}LineCharts/check-day-processed?cameras=${cameras}`)
+      let dateList = await axios.get(`${api}LineCharts/check-day-processed?cameras=${cameras}`)
 
       return {
         cameraName: context.params.cameraName,
@@ -218,8 +218,8 @@
           else
             cameraList = this.cameraName
           let [dataLine, dataHeatMap] = await Promise.all([
-            axios.get(`${{api}}LineCharts/get-reports-day?day=${this.dateSelected.getDate()}&month=${this.dateSelected.getMonth() + 1}&year=${this.dateSelected.getFullYear()}&cameras=${cameraList}`),
-            axios.get(`${{api}}heatMaps/get-reports-day?day=${this.dateSelected.getDate()}&month=${this.dateSelected.getMonth() + 1}&year=${this.dateSelected.getFullYear()}&cameras=${cameraList}`),
+            axios.get(`${api}LineCharts/get-reports-day?day=${this.dateSelected.getDate()}&month=${this.dateSelected.getMonth() + 1}&year=${this.dateSelected.getFullYear()}&cameras=${cameraList}`),
+            axios.get(`${api}heatMaps/get-reports-day?day=${this.dateSelected.getDate()}&month=${this.dateSelected.getMonth() + 1}&year=${this.dateSelected.getFullYear()}&cameras=${cameraList}`),
           ])
           return {dataLine, dataHeatMap}
 
@@ -230,8 +230,8 @@
           else
             cameraList = this.cameraName
           let [dataLine, dataHeatMap] = await Promise.all([
-            axios.get(`${{api}}LineCharts/get-reports-month?month=${this.dateSelected.getMonth() + 1}&year=${this.dateSelected.getFullYear()}&cameras=${cameraList}`),
-            axios.get(`${{api}}heatMaps/get-reports-month?month=${this.dateSelected.getMonth() + 1}&year=${this.dateSelected.getFullYear()}&cameras=${cameraList}`),
+            axios.get(`${api}LineCharts/get-reports-month?month=${this.dateSelected.getMonth() + 1}&year=${this.dateSelected.getFullYear()}&cameras=${cameraList}`),
+            axios.get(`${api}heatMaps/get-reports-month?month=${this.dateSelected.getMonth() + 1}&year=${this.dateSelected.getFullYear()}&cameras=${cameraList}`),
           ])
           return {dataLine, dataHeatMap}
         } else if (this.sort == 'year') {
@@ -241,7 +241,7 @@
           else
             cameraList = this.cameraName
           let [dataLine] = await Promise.all([
-            axios.get(`${{api}}LineCharts/get-reports-year?year=${this.dateSelected.getFullYear()}&cameras=${cameraList}&cameras=${cameraList}`),
+            axios.get(`${api}LineCharts/get-reports-year?year=${this.dateSelected.getFullYear()}&cameras=${cameraList}&cameras=${cameraList}`),
           ])
           return dataLine
         }
