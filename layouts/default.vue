@@ -6,6 +6,10 @@
           <b-nav-item href="/">Home</b-nav-item>
 
         </b-navbar-nav>
+        <b-navbar-nav >
+          <b-nav-item href="/realtime">Realtime-Counting</b-nav-item>
+
+        </b-navbar-nav>
         <b-navbar-nav v-if="getUser" class="ml-auto">
           <b-nav-item-dropdown right>
             <!-- Using 'button-content' slot -->
@@ -65,8 +69,11 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
+  background-color: #f5f5f5;
 }
-
+body{
+  background-color: #f5f5f5;
+}
 *,
 *:before,
 *:after {

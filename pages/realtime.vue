@@ -1,5 +1,10 @@
 <template>
   <div class="container">
+    <div class="header">
+      <p>Realtime Counting</p>
+      <hr>
+    </div>
+
     <div class="counting">
       <b-card
         title="IN"
@@ -49,7 +54,7 @@ import firebase from '../plugins/firebase'
   .container{
     display: flex;
     justify-content: center;
-
+    flex-direction: column;
   }
   .btn
   {
@@ -70,5 +75,16 @@ import firebase from '../plugins/firebase'
     text-align: center;
     width: 30%;
     margin-right:50px;
+  }
+  hr {
+    display: block;
+    margin-top: 0;
+    border-width: 2px;
+  }
+  .header
+  {
+    margin-top: 20px;
+    text-align: center;
+    font-weight: bold;
   }
 </style>
