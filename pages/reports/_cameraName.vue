@@ -51,7 +51,8 @@
         </b-tab>
         <b-tab title="Line chart">
           <p class="noti" v-if="!dateCal">Please select date to view report</p>
-          <LineChart v-if="this.dataLineChart!=null" :dataReport="this.dataLineChart" :day="dateCal" :sort="sort"
+          <p class="noti" v-if="isEmptyDataLinechart && dateCal">This day has not processed yet</p>
+          <LineChart v-if="this.dataLineChart && !this.isEmptyDataLinechart" :dataReport="this.dataLineChart" :day="dateCal" :sort="sort"
                      :key="componentKey"/>
         </b-tab>
       </b-tabs>
@@ -160,7 +161,7 @@
         componentKey: 0,
         dataLineChart: null,
         dataHeatMap: null,
-
+        isEmptyDataLinechart:true,
       }
     },
     computed: {
@@ -201,6 +202,16 @@
         let dataGot = await this.fetchData()
         this.dataLineChart = dataGot.dataLine.data.listReport
         this.dataHeatMap = dataGot.dataHeatMap.data.listReport
+        for(let x=0; x<this.dataLineChart.total.length;x++)
+        {
+          if(this.dataLineChart.total[x]!==0)
+          {
+            this.isEmptyDataLinechart=false
+            break
+          }
+
+        }
+        console.log('is empty data line chart',this.isEmptyDataLinechart)
         console.log('dataLine', this.dataLineChart)
         console.log('dataHeatMap', this.dataHeatMap)
       },
