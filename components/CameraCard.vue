@@ -9,7 +9,7 @@
         img-alt="Image"
         tag="article"
         style="max-width: 20rem;"
-        class="mb-2"
+        :class="isActive"
         img-top
       >
         <b-button v-if="multiCam==false" :href="'/reports/'+this.name" variant="primary">View report</b-button>
@@ -21,44 +21,74 @@
 
 <script>
   import axios from 'axios'
-  const api="https://datncountingapi.mybluemix.net/"
-export default {
-  name: "Camera.vue",
-  props: ["name", "multiCam", "cameras"],
-  data () {
-    return {
-      url:''
-    }
-  },
-  async mounted (){
-    let res = await axios.get(`${api}get-file?filename=${this.name}.png`)
-    if (res.data.url)
-      this.url=res.data.url
-    else
-      this.url='/no-img.jpg'
-  },
-  computed: {
-    isSelected() {
-      let selected = true;
-      console.log(this.cameras)
-      if (this.cameras) {
-        for (let i=0;i<this.cameras.length;i++)
-        {
-          //console.log(cameras[i].toString())
-          if (this.cameras[i] == this.name) {
-            selected = false;
+
+  const api = "https://datncountingapi.mybluemix.net/"
+  export default {
+    name: "Camera.vue",
+    props: ["name", "multiCam", "cameras"],
+    methods:{
+      onClick (){
+        alert('Ohhhhhhhhhh')
+      },
+    },
+    data() {
+      return {
+        url: ''
+      }
+    },
+    async mounted() {
+      let res = await axios.get(`${api}get-file?filename=${this.name}.png`)
+      if (res.data.url)
+        this.url = res.data.url
+      else
+        this.url = '/no-img.jpg'
+    },
+    computed: {
+      isActive(){
+        let selected = '';
+        console.log(this.cameras)
+        if (this.cameras) {
+          for (let i = 0; i < this.cameras.length; i++) {
+            //console.log(cameras[i].toString())
+            if (this.cameras[i] == this.name) {
+              selected = 'active';
+            }
           }
         }
+        console.log(selected)
+        return selected
+      },
+      isSelected() {
+        let selected = true;
+        console.log(this.cameras)
+        if (this.cameras) {
+          for (let i = 0; i < this.cameras.length; i++) {
+            //console.log(cameras[i].toString())
+            if (this.cameras[i] == this.name) {
+              selected = false;
+            }
+          }
+        }
+        console.log(selected)
+        return selected
       }
-      console.log(selected)
-      return selected
     }
-  }
-};
+  };
 </script>
 
 <style scoped>
-.camera-card {
-  margin-bottom: 25px;
-}
+  .active {
+    border: 1px #1e88e5 solid;
+  }
+
+  .camera-card {
+    margin-bottom: 25px;
+    cursor: pointer;
+  }
+
+  .camera-card:hover {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  }
+
+
 </style>

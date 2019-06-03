@@ -4,7 +4,7 @@
       <div class="sub-head">
         <p>CAMERA LIST</p>
         <hr>
-        <div class="head-tool">
+        <div class="head-tool text-center margin-auto display-block">
           Selection mode:
           <b-button v-b-tooltip.hover title="Click here to change selection mode" v-if="mode==1" @click="changeMode" variant="primary">Single</b-button>
           <b-button v-b-tooltip.hover title="Click here to change selection mode" v-else @click="changeMode" variant="primary">Multiple</b-button>
@@ -15,7 +15,7 @@
     <div class="bv-example-row">
       <b-form-group>
         <b-form-checkbox-group id="checkbox-group-2" v-model="selected" name="flavour-2" @change="handleChange">
-          <div class="cell" v-for="camera in cameraList" :key="camera.id">
+          <div class="col-4" v-for="camera in cameraList" :key="camera.id">
             <b-form-checkbox v-if="mode==2" :value="camera.name"></b-form-checkbox>
             <Camera :name="camera.name" :multi-cam="multiCam" :cameras="selected"/>
 
@@ -79,9 +79,9 @@
     align-content: space-around;
   }
 
-  .cell {
-    margin-left: 50px;
-  }
+  /*.cell:not(:nth-child(3n - 2)) {*/
+    /*margin-left: 50px;*/
+  /*}*/
   .head{
     display: flex;
     width: 100%;
