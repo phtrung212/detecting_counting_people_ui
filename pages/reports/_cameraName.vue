@@ -109,6 +109,7 @@
   margin-left: 10px;
 }
 .label {
+  font-size: 20px;
   font-weight: bold;
   color: black;
 }

@@ -3,9 +3,9 @@
     <div class="card">
       <header>
         <!--<canvas id="mycanvas" count="2"></canvas>-->
-        <chartjs-line :width="1200" :height="476" v-if="sort=='day'" :labels="mylabels" :datasets="mydatasets"/>
-        <chartjs-line :width="1200" :height="476" v-if="sort=='month'" :labels="mylabelsMonth" :datasets="mydatasetsMonth"/>
-        <chartjs-line :width="1200" :height="476" v-if="sort=='year'" :labels="mylabelsYear" :datasets="mydatasetsYear"/>
+        <chartjs-line :width="1000" :height="476" v-if="sort=='day'" :labels="mylabels" :datasets="mydatasets"/>
+        <chartjs-line :width="1000" :height="476" v-if="sort=='month'" :labels="mylabelsMonth" :datasets="mydatasetsMonth"/>
+        <chartjs-line :width="1000" :height="476" v-if="sort=='year'" :labels="mylabelsYear" :datasets="mydatasetsYear"/>
       </header>
     </div>
   </div>
