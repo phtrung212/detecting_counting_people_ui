@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-3">
+    <div class="col-3 left">
       <div class="head">
         <div class="infor">
           <div v-if="cameraSelected">
@@ -13,7 +13,7 @@
         </div>
         <div class="time">
           <div class="time_options">
-            <b-form-group label="Choose type of time below">
+            <b-form-group label="Choose type of report below">
               <b-form-radio
                 value="day"
                 v-model="selected"
@@ -49,7 +49,7 @@
 
             <div class="button">
               <b-button size="sm" @click="onCal" variant="primary"
-                >Cal</b-button
+                >View</b-button
               >
             </div>
           </div>
@@ -100,8 +100,13 @@
   </div>
 </template>
 <style>
+  .left
+  {
+
+  }
 .head {
   margin-top: 20px;
+  margin-left: 10px;
 }
 .label {
   font-weight: bold;
@@ -139,15 +144,14 @@ button {
 }
 .time_selection {
   clear: both;
-  float: right;
   display: flex;
   justify-content: right;
   margin-right: 50px;
+
 }
 
 .time_options {
-  float: right;
-  margin-right: 50px;
+  font-weight: bold;
 }
 
 .title {
@@ -297,12 +301,15 @@ export default {
         let cameraList = null;
         if (this.cameraSelected) cameraList = this.cameraSelected;
         else cameraList = this.cameraName;
-        let [dataLine] = await Promise.all([
+        let [dataLine,dataHeatMap] = await Promise.all([
           axios.get(
-            `${api}LineCharts/get-reports-year?year=${this.dateSelected.getFullYear()}&cameras=${cameraList}&cameras=${cameraList}`
+            `${api}LineCharts/get-reports-year?year=${this.dateSelected.getFullYear()}&cameras=${cameraList}`
+          ),
+          axios.get(
+            `${api}heatMaps/get-reports-year?year=${this.dateSelected.getFullYear()}&cameras=${cameraList}`
           )
         ]);
-        return dataLine;
+        return { dataLine, dataHeatMap };
       }
     }
   }
