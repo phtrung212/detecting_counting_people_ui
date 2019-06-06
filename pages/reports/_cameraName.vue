@@ -226,8 +226,8 @@ import moment from "moment";
 import axios from "axios";
 import { mapActions, mapMutations } from "vuex";
 import firebase from "../../plugins/firebase";
-const _api = "https://datncountingapi.mybluemix.net/api/";
-const api = "http://localhost:3001/api/";
+const api = "https://datncountingapi.mybluemix.net/api/";
+const _api = "http://localhost:3001/api/";
 export default {
   name: "reports",
   pageTitle: "Report",
