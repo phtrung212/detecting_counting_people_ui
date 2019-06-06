@@ -6,6 +6,7 @@
         <chartjs-line :width="1000" :height="476" v-if="sort=='day'" :labels="mylabels" :datasets="mydatasets"/>
         <chartjs-line :width="1000" :height="476" v-if="sort=='month'" :labels="mylabelsMonth" :datasets="mydatasetsMonth"/>
         <chartjs-line :width="1000" :height="476" v-if="sort=='year'" :labels="mylabelsYear" :datasets="mydatasetsYear"/>
+        <chartjs-line :width="1000" :height="476" v-if="sort=='range'" :labels="this.range" :datasets="mydatasetsRange"/>
       </header>
     </div>
   </div>
@@ -13,7 +14,7 @@
 
 <script>
   export default {
-    props:['sort','day','dataReport'],
+    props:['sort','dataReport','range'],
     data() {
       return {
         mylabels: ["0h", "1h", "2h", "3h", "4h", "5h", "6h","7h","8h","9h","10h","11h","12h","13h","14h","15h","16h","17h","18h","19h","20h","21h","22h","23h"],
@@ -220,7 +221,74 @@
             data: this.dataReport.total,
             spanGaps: false,
           }
-        ]
+        ],
+        mydatasetsRange:[{
+          label: "OUT",
+          fill: false,
+          lineTension: 0.1,
+          backgroundColor: "rgba(75,192,192,0.4)",
+          borderColor: "#5dff25",
+          borderCapStyle: 'butt',
+          borderDash: [],
+          borderDashOffset: 0.0,
+          borderJoinStyle: 'miter',
+          pointBorderColor: "rgba(75,192,192,1)",
+          pointBackgroundColor: "#fff",
+          pointBorderWidth: 1,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: "rgba(75,192,192,1)",
+          pointHoverBorderColor: "rgba(220,220,220,1)",
+          pointHoverBorderWidth: 2,
+          pointRadius: 1,
+          pointHitRadius: 10,
+          data:this.dataReport.out,
+          spanGaps: false,
+        },
+          {
+            label: "IN",
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "#191dff",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: this.dataReport.in,
+            spanGaps: false,
+          },
+          {
+            label: "TOTAL",
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "#ff3b2b",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: this.dataReport.total,
+            spanGaps: false,
+          }
+        ],
       };
     }
   };

@@ -35,9 +35,17 @@
                 inline
                 >Year</b-form-radio
               >
+              <b-form-radio
+                value="range"
+                v-model="selected"
+                name="some-radios"
+                inline
+              >Range of day</b-form-radio
+              >
             </b-form-group>
           </div>
-          <div class="time_selection">
+          <div v-if="selected!='range'" class="time_selection">
+
             <div>
               <Datepicker
                 v-model="dateSelected"
@@ -53,6 +61,41 @@
               >
             </div>
           </div>
+          <div v-if="selected=='range'" class="rangeOfDay">
+            <div class="time_selection_range">
+              <div>
+                <p class="mr-1 font-weight-bold">From</p>
+              </div>
+
+              <div>
+                <Datepicker
+                  v-model="dateSelected"
+                  :minimumView="this.selected"
+                  :highlighted="highlighted"
+                  placeholder="Select Date"
+                ></Datepicker>
+              </div>
+            </div>
+            <div class="time_selection_range">
+              <div>
+                <p class="mr-1 font-weight-bold">To</p>
+              </div>
+              <div>
+                <Datepicker
+                  v-model="dateSelectedTo"
+                  minimumView="day"
+                  :highlighted="highlighted"
+                  placeholder="Select Date"
+                ></Datepicker>
+              </div>
+            </div>
+            <div class="button">
+              <b-button size="sm" @click="onCal" variant="primary"
+              >View</b-button
+              >
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -66,7 +109,7 @@
           />
 
           <div v-if="dateCal && !this.dataHeatMap" class="loading">
-            <div id="text">
+            <div class="text">
               <Loading></Loading>
               <p>Loading</p>
             </div>
@@ -84,15 +127,21 @@
         </b-tab>
         <b-tab title="Line chart">
           <p class="noti" v-if="!dateCal">Please select date to view report</p>
-          <p class="noti" v-if="isEmptyDataLinechart && dateCal">
+          <p class="noti" v-if="isEmptyDataLinechart && dateCal && dataLineChart">
             This day has not processed yet
           </p>
+          <div v-if="dateCal && !this.dataLineChart" class="loading">
+            <div class="text">
+              <Loading></Loading>
+              <p>Loading</p>
+            </div>
+          </div>
           <LineChart
             v-if="this.dataLineChart && !this.isEmptyDataLinechart"
             :dataReport="this.dataLineChart"
-            :day="dateCal"
             :sort="sort"
             :key="componentKey"
+            :range="range"
           />
         </b-tab>
       </b-tabs>
@@ -117,7 +166,7 @@
   color: blue;
   font-weight: bold;
 }
-#text {
+.text {
   display: flex;
   flex-direction: column;
   font-weight: bold;
@@ -150,7 +199,13 @@ button {
   margin-right: 50px;
 
 }
-
+  .time_selection_range {
+    margin-top: 10px;
+    clear: both;
+    display: flex;
+    margin-right: 50px;
+    justify-content: space-between;
+  }
 .time_options {
   font-weight: bold;
 }
@@ -171,8 +226,8 @@ import moment from "moment";
 import axios from "axios";
 import { mapActions, mapMutations } from "vuex";
 import firebase from "../../plugins/firebase";
-const api = "https://datncountingapi.mybluemix.net/api/";
-const _api = "http://localhost:3001/api/";
+const _api = "https://datncountingapi.mybluemix.net/api/";
+const api = "http://localhost:3001/api/";
 export default {
   name: "reports",
   pageTitle: "Report",
@@ -201,12 +256,14 @@ export default {
     return {
       selected: "day",
       dateSelected: null,
+      dateSelectedTo: null,
       sort: null,
       dateCal: null,
       componentKey: 0,
       dataLineChart: null,
       dataHeatMap: null,
-      isEmptyDataLinechart: true
+      isEmptyDataLinechart: true,
+      range:[],
     };
   },
   computed: {
@@ -244,13 +301,25 @@ export default {
   },
   methods: {
     async onCal() {
+      this.isEmptyDataLinechart=true;
       this.dataHeatMap = null;
       this.dataLineChart = null;
+      this.range=[]
       this.sort = this.selected;
       this.dateCal = this.customFormatter(this.dateSelected);
       console.log("date", this.dateSelected.getDate());
       this.componentKey += 1;
       let dataGot = await this.fetchData();
+      if(this.dateSelectedTo)
+      {
+        for (let i= 0;i<this.dateSelectedTo.getDate()-this.dateSelected.getDate()+1;i++)
+        {
+          let temp=this.dateSelected.getDate()+i+'-'+this.dateSelected.getMonth()+1+'-'+this.dateSelected.getFullYear()
+          this.range.push(temp)
+        }
+        console.log('range',this.range)
+      }
+
       this.dataLineChart = dataGot.dataLine.data.listReport;
       this.dataHeatMap = dataGot.dataHeatMap.data.listReport;
       for (let x = 0; x < this.dataLineChart.total.length; x++) {
@@ -264,7 +333,7 @@ export default {
       console.log("dataHeatMap", this.dataHeatMap);
     },
     customFormatter(date) {
-      return moment(date).format("YYYY-MM-DD[T]hh:mm:ss[Z]");
+      return moment(date).format("DD-MM-YYYY");
     },
     ...mapMutations(["setUser"]),
     async fetchData() {
@@ -308,6 +377,24 @@ export default {
           ),
           axios.get(
             `${api}heatMaps/get-reports-year?year=${this.dateSelected.getFullYear()}&cameras=${cameraList}`
+          )
+        ]);
+        return { dataLine, dataHeatMap };
+      }else if(this.sort=='range')
+      {
+        let cameraList = null;
+        if (this.cameraSelected) cameraList = this.cameraSelected;
+        else cameraList = this.cameraName;
+        let [dataLine, dataHeatMap] = await Promise.all([
+          axios.get(
+            `${api}LineCharts/get-reports-range-of-day?day=${this.dateSelected.getDate()}&month=${this.dateSelected.getMonth() +
+            1}&year=${this.dateSelected.getFullYear()}&dayTo=${this.dateSelectedTo.getDate()}&monthTo=${this.dateSelectedTo.getMonth() +
+            1}&yearTo=${this.dateSelectedTo.getFullYear()}&cameras=${cameraList}`
+          ),
+          axios.get(
+            `${api}heatMaps/get-reports-range-of-day?day=${this.dateSelected.getDate()}&month=${this.dateSelected.getMonth() +
+            1}&year=${this.dateSelected.getFullYear()}&dayTo=${this.dateSelectedTo.getDate()}&monthTo=${this.dateSelectedTo.getMonth() +
+            1}&yearTo=${this.dateSelectedTo.getFullYear()}&cameras=${cameraList}`
           )
         ]);
         return { dataLine, dataHeatMap };

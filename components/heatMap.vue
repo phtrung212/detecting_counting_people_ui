@@ -60,6 +60,21 @@
               value[j] += parseInt(dataH.value[i][j])
             }
           }
+        }else if(mode=='range')
+        {
+          for (let j=0;j<dataH.x[0].length;j++)
+          {
+            x.push(parseInt(dataH.x[0][j]))
+            y.push(parseInt(dataH.y[0][j]))
+            value.push(parseInt(dataH.value[0][j]))
+          }
+          for (let i=1;i<dataH.x.length;i++)
+          {
+            for(let j=0;j<dataH.x[0].length;j++)
+            {
+              value[j] += parseInt(dataH.value[i][j])
+            }
+          }
         }else
         {
           x=dataH.x
