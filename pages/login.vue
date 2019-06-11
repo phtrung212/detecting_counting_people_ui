@@ -1,9 +1,10 @@
 <template>
   <div class="container">
-    <div class="head">
+
+    <div class="form">
+      <div class="head">
       <h2>Login</h2>
     </div>
-    <div class="form">
       <form @submit.prevent="handleSubmit">
         <div class="form-group">
 
@@ -16,7 +17,7 @@
           <div v-show="submitted && !password" class="invalid-feedback">Password is required</div>
         </div>
         <div id="button" class="form-group">
-          <button class="btn btn-primary" >Login</button>
+          <button class="btn btn-primary" @keyup.enter.native="handleSubmit">Login</button>
         </div>
       </form>
     </div>
@@ -92,9 +93,16 @@
 }
   .container
   {
-    margin-top: 20px;
+    margin-top: 50px;
+    width: 50%;
+    min-height: 50vh;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: center;
+    background-color: #e8ecf5;
+    border-radius:5px;
+    align-items: center;
+    align-content: center;
   }
   .head
   {
