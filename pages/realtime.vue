@@ -4,23 +4,10 @@
       <p>Realtime Counting</p>
       <hr>
     </div>
-
-    <div class="counting">
-      <b-card
-        title="IN"
-
-
-      >
-        <b-button variant="danger">{{this.in}}</b-button>
-      </b-card>
-
-      <b-card
-        title="OUT"
-
-
-      >
-        <b-button variant="success">{{this.out}}</b-button>
-      </b-card>
+    <div class="row">
+      <div class="col-4" v-for="(camera,index) in listRealtimeCam" :key="index">
+        <Camera :name="camera" :in="in_num[index]" :out="out[index]"/>
+      </div>
     </div>
 
 
@@ -29,57 +16,57 @@
 
 <script>
 import firebase from '../plugins/firebase'
+import Camera from  '~/components/RealtimeCameraCard.vue'
   export default {
       name: "realtime",
     data ( context ) {
       // Called every time before loading the component
-      return {in :0 , out : 0}
+      return {in_num :[] , out : [], listRealtimeCam:[]}
     },
-    created :  function () {
+    components: {
+     Camera
+    },
+    created : async function () {
         let me=this
-      firebase
+      await firebase
         .database ()
         .ref ( '/')
         .on('value',function(snapshot){
-          let data=snapshot.val()
-          me.in=data.in
-          me.out=data.out
-          console.log(data)
+          let list_cam=[]
+          let x=snapshot.forEach(function(element) {
+            console.log(element.key);
+            list_cam.push(element.key)
+          })
+          me.listRealtimeCam=list_cam
+          me.listRealtimeCam.forEach(function (camera) {
+            let in_num=0
+            let out_num=0
+            firebase
+              .database ()
+              .ref ( '/'+camera)
+              .on('value',function(snapshot){
+                let data=snapshot.val()
+                in_num=data.in
+                out_num=data.out
+              })
+            me.in_num.push(in_num)
+            me.out.push(out_num)
+          })
         })
+      console.log('in',me.in)
     },
   }
 </script>
 
 <style scoped>
-  .container{
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-  }
-  .btn
-  {
-    width:100%;
-    font-size: 500%;
-  }
-  .counting
-  {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin:0;
-    padding: 30px;
-    width: 100%;
-  }
-  .card
-  {
-    text-align: center;
-    width: 30%;
-    margin-right:50px;
-  }
   hr {
     display: block;
     margin-top: 0;
     border-width: 2px;
+  }
+  .listCam{
+    display: flex;
+    justify-content: space-between;
   }
   .header
   {

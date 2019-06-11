@@ -102,29 +102,32 @@
 
     <div class="report_selection col-9">
       <b-tabs content-class="mt-3">
-        <b-tab title="Heat map" active>
-          <Slider
-            style="margin-bottom: 32px"
-            v-if="sort == 'day' && this.dataHeatMap != null"
-          />
 
-          <div v-if="dateCal && !this.dataHeatMap" class="loading">
-            <div class="text">
-              <Loading></Loading>
-              <p>Loading</p>
+          <b-tab v-if="!this.cameraSelected" title="Heat map" active>
+            <Slider
+              style="margin-bottom: 32px"
+              v-if="sort == 'day' && this.dataHeatMap != null"
+            />
+
+            <div v-if="dateCal && !this.dataHeatMap" class="loading">
+              <div class="text">
+                <Loading></Loading>
+                <p>Loading</p>
+              </div>
             </div>
-          </div>
-          <p class="noti" v-if="!dateCal">Please select date to view report</p>
+            <p class="noti" v-if="!dateCal">Please select date to view report</p>
 
-          <HeatMap
-            :mode="sort"
-            v-if="this.dataHeatMap != null"
-            :dataH="this.dataHeatMap"
-            :key="componentKey && (sliderStart || sliderEnd)"
-            :start-hour="sliderStart"
-            :end-hour="sliderEnd"
-          />
-        </b-tab>
+            <HeatMap
+              :mode="sort"
+              v-if="this.dataHeatMap != null"
+              :dataH="this.dataHeatMap"
+              :key="componentKey && (sliderStart || sliderEnd)"
+              :start-hour="sliderStart"
+              :end-hour="sliderEnd"
+            />
+          </b-tab>
+
+
         <b-tab title="Line chart">
           <p class="noti" v-if="!dateCal">Please select date to view report</p>
           <p class="noti" v-if="isEmptyDataLinechart && dateCal && dataLineChart">
