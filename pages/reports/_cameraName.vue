@@ -305,6 +305,7 @@ export default {
   methods: {
     async onCal() {
       this.isEmptyDataLinechart=true;
+      this.isEmptyDataHeatmap=true;
       this.dataHeatMap = null;
       this.dataLineChart = null;
       this.range=[]

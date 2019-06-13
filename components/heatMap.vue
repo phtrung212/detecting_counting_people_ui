@@ -1,11 +1,10 @@
 <template>
-  <div id="echarts">
-    <div id="heatMap">
-      <img v-if="isEmptyData==false" src="https://bitly.vn/1s50"/>
-      <p v-if="isEmptyData===true">This day has not processed yet</p>
+    <div id="echarts">
+      <div id="heatMap">
+        <img v-if="isEmptyData==false" src="https://bitly.vn/1s50"/>
+        <p v-if="isEmptyData===true">This day has not processed yet</p>
+      </div>
     </div>
-
-  </div>
 </template>
 <script type="text/javascript">
   import Slider from '@@/components/Slider.vue'
@@ -22,7 +21,8 @@
     },
     data () {
       return {
-        isEmptyData:true
+        isEmptyData:true,
+        isAllValueZero:true,
       }
     },
     computed:{
@@ -83,8 +83,10 @@
         }
 
         for (let i=0;i<x.length;i++) {
-          if(value[i]!==0 && this.isEmptyData===true)
+          if(x[i]!==0 && this.isEmptyData===true)
             this.isEmptyData=false
+          if(value[i]!==0 && this.isAllValueZero===true)
+            this.isAllValueZero=false
           max = Math.max(max, value[i]);
           var point = {
             x: parseInt(x[i]),
@@ -93,6 +95,8 @@
           };
           points.push(point);
         }
+        if(this.isAllValueZero===true)
+          max=100
         console.log('points',points)
         console.log('Maxxxxxxxxxx',max)
         console.log('IsEmpty',this.isEmptyData)
