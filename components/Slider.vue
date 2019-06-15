@@ -64,7 +64,7 @@
          * toLocaleTimeString is predefined javascript date function, which is used to
          * customize the date in different format
          */
-        console.log('tooltipChangeHandler')
+        //console.log('tooltipChangeHandler')
         let custom = { hour: "2-digit", minute: "2-digit" };
         // Splitting the range values from the tooltip using space into an array.
         if (args.text.indexOf("-") !== -1) {

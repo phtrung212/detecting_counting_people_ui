@@ -62,24 +62,47 @@
           }
         }else if(mode=='range')
         {
-          for (let j=0;j<dataH.x[0].length;j++)
+          if(startHour < 0 || endHour <0)
           {
-            x.push(parseInt(dataH.x[0][j]))
-            y.push(parseInt(dataH.y[0][j]))
-            value.push(parseInt(dataH.value[0][j]))
+            startHour=0;
+            endHour=dataH.x.length-1;
           }
-          for (let i=1;i<dataH.x.length;i++)
+          for (let j=0;j<dataH.x[startHour].length;j++)
           {
-            for(let j=0;j<dataH.x[0].length;j++)
+            x.push(parseInt(dataH.x[startHour][j]))
+            y.push(parseInt(dataH.y[startHour][j]))
+            value.push(parseInt(dataH.value[startHour][j]))
+          }
+          for (let i=startHour;i<endHour+1;i++)
+          {
+            for(let j=0;j<dataH.x[startHour].length;j++)
             {
               value[j] += parseInt(dataH.value[i][j])
             }
           }
         }else
         {
-          x=dataH.x
-          y=dataH.y
-          value=dataH.value
+          if(startHour < 0 || endHour <0)
+          {
+            startHour=0;
+            endHour=dataH.x.length-1;
+          }
+          for (let j=0;j<dataH.x[startHour].length;j++)
+          {
+            x.push(parseInt(dataH.x[startHour][j]))
+            y.push(parseInt(dataH.y[startHour][j]))
+            value.push(parseInt(dataH.value[startHour][j]))
+          }
+
+          for (let i=1;i<endHour+1;i++)
+          {
+            for(let j=0;j<dataH.x[startHour].length;j++)
+            {
+              if(dataH.value[i][j])
+                value[j] += parseInt(dataH.value[i][j])
+            }
+          }
+          console.log('value',value)
         }
 
         for (let i=0;i<x.length;i++) {

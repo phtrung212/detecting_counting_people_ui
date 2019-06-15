@@ -4,7 +4,7 @@
       <p>Realtime Counting</p>
       <hr>
     </div>
-    <div class="row">
+    <div class="row" :key="this.in_num+this.out+this.listRealtimeCam">
       <div class="col-4" v-for="(camera,index) in listRealtimeCam" :key="index">
         <Camera :name="camera" :in="in_num[index]" :out="out[index]"/>
       </div>
@@ -38,20 +38,21 @@ import Camera from  '~/components/RealtimeCameraCard.vue'
             list_cam.push(element.key)
           })
           me.listRealtimeCam=list_cam
+          let in_num=[]
+          let out_num=[]
           me.listRealtimeCam.forEach(function (camera) {
-            let in_num=0
-            let out_num=0
             firebase
               .database ()
               .ref ( '/'+camera)
               .on('value',function(snapshot){
                 let data=snapshot.val()
-                in_num=data.in
-                out_num=data.out
+                in_num.push(data.in)
+                out_num.push(data.out)
               })
-            me.in_num.push(in_num)
-            me.out.push(out_num)
+
           })
+          me.in_num=in_num
+          me.out=out_num
         })
       console.log('in',me.in)
     },

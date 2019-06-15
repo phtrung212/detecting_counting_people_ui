@@ -106,9 +106,14 @@
           <b-tab v-if="!this.cameraSelected" title="Heat map" active>
             <Slider
               style="margin-bottom: 32px"
-              v-if="sort == 'day' && this.dataHeatMap != null"
+              v-if="sort === 'day' && this.dataHeatMap != null"
             />
-
+            <CustomSlider :value-min="1" :value-max="30" v-bind:value-large-step="2" :value-small-step="1" style="margin-bottom: 32px"
+                           v-if="sort === 'month' && this.dataHeatMap != null" :mode="this.sort"></CustomSlider>
+            <CustomSlider :value-min="1" :value-max="12" v-bind:value-large-step="1" :value-small-step="1" style="margin-bottom: 32px"
+                          v-if="sort === 'year' && this.dataHeatMap != null" :mode="this.sort"></CustomSlider>
+            <CustomSlider :value-min="this.dateSelected.getDate()" :value-max="this.dateSelectedTo.getDate()" v-bind:value-large-step="1" :value-small-step="1" style="margin-bottom: 32px"
+                          v-if="sort === 'range' && this.dataHeatMap != null" :mode="this.sort"></CustomSlider>
             <div v-if="dateCal && !this.dataHeatMap" class="loading">
               <div class="text">
                 <Loading></Loading>
@@ -121,9 +126,9 @@
               :mode="sort"
               v-if="this.dataHeatMap != null"
               :dataH="this.dataHeatMap"
-              :key="componentKey && (sliderStart || sliderEnd)"
-              :start-hour="sliderStart"
-              :end-hour="sliderEnd"
+              :key="componentKey +sliderStartPoint+sliderEndPoint"
+              :start-hour="sliderStartPoint"
+              :end-hour="sliderEndPoint"
             />
           </b-tab>
 
@@ -223,6 +228,8 @@ button {
 import LineChart from "../../components/chart-line";
 import HeatMap from "../../components/heatMap";
 import Slider from "../../components/Slider";
+import CustomSlider from "../../components/CustomSlider";
+
 import Datepicker from "vuejs-datepicker";
 import Loading from "../../components/loading";
 import moment from "moment";
@@ -234,7 +241,7 @@ const _api = "http://localhost:3001/api/";
 export default {
   name: "reports",
   pageTitle: "Report",
-  components: { HeatMap, LineChart, Datepicker, Slider, Loading },
+  components: { HeatMap, LineChart, Datepicker, Slider, Loading, CustomSlider },
   async asyncData(context) {
     console.log("cookie", context.app.$cookies.get("cameras"));
     let cameras = context.app.$cookies.get("cameras")
@@ -282,11 +289,51 @@ export default {
         )
       };
     },
+    sliderStartPoint() {
+      if(this.sort==='day')
+        return this.sliderStart;
+      else if(this.sort==='month')
+        return this.sliderStartMonth;
+      else if(this.sort==='year')
+        return this.sliderStartYear;
+      else if(this.sort==='range')
+        return this.sliderStartRange;
+    },
+    sliderEndPoint() {
+      if(this.sort==='day')
+        return this.sliderEnd;
+      else if(this.sort==='month')
+        return this.sliderEndMonth;
+      else if(this.sort==='year')
+        return this.sliderEndYear;
+      else if(this.sort==='range')
+        return this.sliderEndRange;
+    },
     sliderStart() {
-      return this.$store.state.sliderStart;
+        return this.$store.state.sliderStart;
+    },
+    sliderStartMonth() {
+      return this.$store.state.sliderStartMonth-1;
+    },
+    sliderStartYear() {
+      return this.$store.state.sliderStartYear-1;
+    },
+    sliderStartRange() {
+        return this.$store.state.sliderStartRange-this.dateSelected.getDate();
     },
     sliderEnd() {
       return this.$store.state.sliderEnd;
+    },
+    sliderEndMonth() {
+      return this.$store.state.sliderEndMonth-1;
+    },
+    sliderEndYear() {
+      return this.$store.state.sliderEndYear-1;
+    },
+    sliderEndRange() {
+      if(this.dateSelectedTo)
+        return this.$store.state.sliderEndRange-this.dateSelected.getDate();
+      else return 0;
     },
     cameraSelected() {
       let cameras = this.$cookies.get("cameras");
@@ -314,14 +361,17 @@ export default {
       console.log("date", this.dateSelected.getDate());
       this.componentKey += 1;
       let dataGot = await this.fetchData();
+
+      console.log('dateTo',this.dateSelectedTo)
       if(this.dateSelectedTo)
       {
         for (let i= 0;i<this.dateSelectedTo.getDate()-this.dateSelected.getDate()+1;i++)
         {
-          let temp=this.dateSelected.getDate()+i+'-'+this.dateSelected.getMonth()+1+'-'+this.dateSelected.getFullYear()
+          let month=this.dateSelected.getMonth()+1
+          let temp=this.dateSelected.getDate()+i+'-'+month+'-'+this.dateSelected.getFullYear()
           this.range.push(temp)
         }
-        console.log('range',this.range)
+        console.log('range',this.range[this.range.length-1])
       }
 
       this.dataLineChart = dataGot.dataLine.data.listReport;

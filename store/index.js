@@ -3,6 +3,12 @@ import firebase from "../plugins/firebase";
 export const state = () => ({
   sliderStart: 0,
   sliderEnd: 0,
+  sliderStartMonth: 0,
+  sliderEndMonth: 0,
+  sliderStartYear: 0,
+  sliderEndYear: 0,
+  sliderStartRange: 0,
+  sliderEndRange: 0,
   heatData: null,
   selectedCamera: false,
   user: null,
@@ -18,6 +24,24 @@ export const mutations = {
   },
   setSliderEnd: function(state, end) {
     state.sliderEnd = end;
+  },
+  setSliderStartMonth: function(state, start) {
+    state.sliderStartMonth = start;
+  },
+  setSliderEndMonth: function(state, end) {
+    state.sliderEndMonth = end;
+  },
+  setSliderStartYear: function(state, start) {
+    state.sliderStartYear = start;
+  },
+  setSliderEndYear: function(state, end) {
+    state.sliderEndYear = end;
+  },
+  setSliderStartRange: function(state, start) {
+    state.sliderStartRange = start;
+  },
+  setSliderEndRange: function(state, end) {
+    state.sliderEndRange = end;
   },
   setHeatData: function(state, data) {
     state.heatData = data;
