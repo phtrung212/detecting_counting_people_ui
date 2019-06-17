@@ -89,14 +89,14 @@
                 ></Datepicker>
               </div>
             </div>
-            <p class="co-red" v-if="isInvalidDate">Date is INVALID</p>
+            <p class="co-red" v-if="isInvalidDate && this.componentKey!==0">Date is INVALID</p>
             <div class="button">
               <b-button size="sm" @click="onCal" variant="primary"
               >View</b-button
               >
             </div>
           </div>
-          <p class="co-red" v-if="isInvalidDate && this.selected!=='range'">Date is INVALID</p>
+          <p class="co-red" v-if="isInvalidDate && this.selected!=='range' ">Date is INVALID</p>
         </div>
       </div>
     </div>
@@ -107,14 +107,14 @@
           <b-tab v-if="!this.cameraSelected" title="Heat map" active>
             <Slider
               style="margin-bottom: 32px"
-              v-if="sort === 'day' && this.dataHeatMap != null"
+              v-if="sort === 'day' && this.dataHeatMap != null && !this.isEmptyDataLinechart"
             />
             <CustomSlider :value-min="1" :value-max="30" v-bind:value-large-step="2" :value-small-step="1" style="margin-bottom: 32px"
-                           v-if="sort === 'month' && this.dataHeatMap != null" :mode="this.sort"></CustomSlider>
+                           v-if="sort === 'month' && this.dataHeatMap != null && !this.isEmptyDataLinechart" :mode="this.sort"></CustomSlider>
             <CustomSlider :value-min="1" :value-max="12" v-bind:value-large-step="1" :value-small-step="1" style="margin-bottom: 32px"
-                          v-if="sort === 'year' && this.dataHeatMap != null" :mode="this.sort"></CustomSlider>
+                          v-if="sort === 'year' && this.dataHeatMap != null && !this.isEmptyDataLinechart" :mode="this.sort"></CustomSlider>
             <CustomSlider :value-min="this.dateSelected.getDate()" :value-max="this.dateSelectedTo.getDate()" v-bind:value-large-step="1" :value-small-step="1" style="margin-bottom: 32px"
-                          v-if="sort === 'range' && this.dataHeatMap != null" :mode="this.sort"></CustomSlider>
+                          v-if="sort === 'range' && this.dataHeatMap != null && !this.isEmptyDataLinechart" :mode="this.sort"></CustomSlider>
             <div v-if="dateCal && !this.dataHeatMap && !isInvalidDate" class="loading">
               <div class="text">
                 <Loading></Loading>
@@ -252,7 +252,7 @@ export default {
     let dateList = await axios.get(
       `${api}LineCharts/check-day-processed?cameras=${cameras}`
     );
-
+    console.log('daylist',dateList)
     return {
       cameraName: context.params.cameraName,
       days: dateList.data
@@ -362,7 +362,7 @@ export default {
     async onCal() {
 
         this.componentKey += 1;
-        if(this.dateSelected){
+        if(this.dateSelected && ((this.selected==='range' && this.dateSelectedTo)||this.selected!=='range')){
           this.isEmptyDataLinechart=true;
           this.isEmptyDataHeatmap=true;
           this.dataHeatMap = null;
@@ -395,6 +395,7 @@ export default {
           console.log("is empty data line chart", this.isEmptyDataLinechart);
           console.log("dataLine", this.dataLineChart);
           console.log("dataHeatMap", this.dataHeatMap);
+          this.componentKey-=1;
         }
 
 
