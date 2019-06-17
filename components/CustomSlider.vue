@@ -79,8 +79,8 @@ export default {
           this.$store.commit('setSliderEndRange', this.endPoint)
         }
 
-        console.log('rangeFromTooltip',range)
-        console.log(this.startPoint, this.endPoint)
+        //console.log('rangeFromTooltip',range)
+        //console.log(this.startPoint, this.endPoint)
       }
 
       /**

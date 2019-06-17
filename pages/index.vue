@@ -1,7 +1,7 @@
 <template>
   <section class="container">
     <div>
-      <GridView :cameraList="cameras" />
+      <GridView :cameraList="cameras" :inforCameras="info" />
     </div>
 
   </section>
@@ -20,7 +20,30 @@ export default {
   pageTitle: 'Camera List',
   async asyncData () {
     let { data } = await axios.get(`${api}cameras?filter[fields][id]=true&filter[fields][name]=true`)
-    return { cameras: data}
+    let camNames=[]
+    for (let i=0;i<data.length;i++)
+    {
+      camNames.push('%22'+data[i].name+'%22')
+    }
+    let infors= await  axios.get(`${api}LineCharts/getLastDayProcessed?cameras=[${camNames}]`);
+    console.log('infor',infors.data.data)
+    let inforSentToComp=[]
+    for (let j=0;j<infors.data.data.length;j++)
+    {
+      if(infors.data.data[j].length!==0)
+      {
+
+        let day=infors.data.data[j].day+'/'+infors.data.data[j].month+'/'+infors.data.data[j].year;
+        inforSentToComp.push({day:day,in:infors.data.data[j].in,out:infors.data.data[j].out})
+      }else
+      {
+        let day='Empty data';
+        inforSentToComp.push({day:day,in:0,out:0})
+      }
+
+    }
+    console.log('infor send to component',inforSentToComp)
+    return { cameras: data, info:inforSentToComp}
   },
   data: function () {
     return {

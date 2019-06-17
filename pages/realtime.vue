@@ -34,7 +34,7 @@ import Camera from  '~/components/RealtimeCameraCard.vue'
         .on('value',function(snapshot){
           let list_cam=[]
           let x=snapshot.forEach(function(element) {
-            console.log(element.key);
+            //console.log(element.key);
             list_cam.push(element.key)
           })
           me.listRealtimeCam=list_cam
@@ -54,7 +54,7 @@ import Camera from  '~/components/RealtimeCameraCard.vue'
           me.in_num=in_num
           me.out=out_num
         })
-      console.log('in',me.in)
+      //console.log('in',me.in)
     },
   }
 </script>

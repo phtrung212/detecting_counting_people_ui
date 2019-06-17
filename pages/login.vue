@@ -16,9 +16,11 @@
           <input type="password" v-model="password" name="password" class="form-control" placeholder="password" :class="{ 'is-invalid': submitted && !password }" />
           <div v-show="submitted && !password" class="invalid-feedback">Password is required</div>
         </div>
+        <p class="co-red" v-if="this.err">{{this.err}}</p>
         <div id="button" class="form-group">
           <button class="btn btn-primary" @keyup.enter.native="handleSubmit">Login</button>
         </div>
+
       </form>
     </div>
   </div>
@@ -42,7 +44,8 @@
       return {
         username: '',
         password: '',
-        submitted: false
+        submitted: false,
+        err:null,
       }
     },
     methods: {
@@ -69,7 +72,9 @@
               email: this.username,
               password: this.password
             })
-            .then(() => {
+            .then((res,err) => {
+              if(err)
+                console.log('login error',err)
               this.$cookies.set('isAuth', true, {
                 path: '/',
                 maxAge: 60 * 60 * 24 * 7
@@ -79,7 +84,8 @@
                 window.location.reload();
               }*/
             })
-            .catch((err) => console.log(err))
+            .catch((err) => {console.log('loginerr',err.message)
+            this.err='Email or password is invalid'})
         }
       }
     }
@@ -87,6 +93,9 @@
 </script>
 
 <style scoped>
+  .co-red{
+    color: red;
+  }
 .form{
   align-self: center;
   width: 50%;
@@ -116,5 +125,8 @@
   button
   {
     width:30%;
+  }
+  h2{
+    margin-bottom: 20px;
   }
 </style>

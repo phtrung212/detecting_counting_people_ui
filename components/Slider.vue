@@ -90,7 +90,7 @@
           );
           // Assigning our custom text to the tooltip value.
           args.text = firstPart + " - " + secondPart;
-          console.log(this.startPoint, this.endPoint)
+          //console.log(this.startPoint, this.endPoint)
         } else {
           args.text =
             "Until " +

@@ -89,13 +89,14 @@
                 ></Datepicker>
               </div>
             </div>
+            <p class="co-red" v-if="isInvalidDate">Date is INVALID</p>
             <div class="button">
               <b-button size="sm" @click="onCal" variant="primary"
               >View</b-button
               >
             </div>
           </div>
-
+          <p class="co-red" v-if="isInvalidDate && this.selected!=='range'">Date is INVALID</p>
         </div>
       </div>
     </div>
@@ -114,7 +115,7 @@
                           v-if="sort === 'year' && this.dataHeatMap != null" :mode="this.sort"></CustomSlider>
             <CustomSlider :value-min="this.dateSelected.getDate()" :value-max="this.dateSelectedTo.getDate()" v-bind:value-large-step="1" :value-small-step="1" style="margin-bottom: 32px"
                           v-if="sort === 'range' && this.dataHeatMap != null" :mode="this.sort"></CustomSlider>
-            <div v-if="dateCal && !this.dataHeatMap" class="loading">
+            <div v-if="dateCal && !this.dataHeatMap && !isInvalidDate" class="loading">
               <div class="text">
                 <Loading></Loading>
                 <p>Loading</p>
@@ -138,7 +139,7 @@
           <p class="noti" v-if="isEmptyDataLinechart && dateCal && dataLineChart">
             This day has not processed yet
           </p>
-          <div v-if="dateCal && !this.dataLineChart" class="loading">
+          <div v-if="dateCal && !this.dataLineChart  && !isInvalidDate" class="loading">
             <div class="text">
               <Loading></Loading>
               <p>Loading</p>
@@ -157,9 +158,10 @@
   </div>
 </template>
 <style>
-  .left
+  .co-red
   {
-
+    color: red;
+    font-weight: bold;
   }
 .head {
   margin-top: 20px;
@@ -256,12 +258,6 @@ export default {
       days: dateList.data
     };
   },
-  async mounted() {
-    // let user = await new Promise((resolve, reject) => {
-    //   firebase.auth().onAuthStateChanged((user) => resolve(user))
-    // })
-    // this.setUser(user) // setUser is mapped action from vuex
-  },
   data: function() {
     return {
       selected: "day",
@@ -274,6 +270,7 @@ export default {
       dataHeatMap: null,
       isEmptyDataLinechart: true,
       range:[],
+      errorMess:null,
     };
   },
   computed: {
@@ -347,44 +344,61 @@ export default {
       }
       cameraList += cameraArray[cameraArray.length - 1];
       return cameraList;
-    }
+    },
+    isInvalidDate(){
+      if((!this.dateSelected || !this.dateSelectedTo) && this.componentKey!==0)
+      {
+        if (this.selected==='range')
+        {
+            return (!this.dateSelectedTo || !this.dateSelected)
+        }else{
+            return !this.dateSelected
+        }
+      }else
+        return false
+    },
   },
   methods: {
     async onCal() {
-      this.isEmptyDataLinechart=true;
-      this.isEmptyDataHeatmap=true;
-      this.dataHeatMap = null;
-      this.dataLineChart = null;
-      this.range=[]
-      this.sort = this.selected;
-      this.dateCal = this.customFormatter(this.dateSelected);
-      console.log("date", this.dateSelected.getDate());
-      this.componentKey += 1;
-      let dataGot = await this.fetchData();
 
-      console.log('dateTo',this.dateSelectedTo)
-      if(this.dateSelectedTo)
-      {
-        for (let i= 0;i<this.dateSelectedTo.getDate()-this.dateSelected.getDate()+1;i++)
-        {
-          let month=this.dateSelected.getMonth()+1
-          let temp=this.dateSelected.getDate()+i+'-'+month+'-'+this.dateSelected.getFullYear()
-          this.range.push(temp)
-        }
-        console.log('range',this.range[this.range.length-1])
-      }
+        this.componentKey += 1;
+        if(this.dateSelected){
+          this.isEmptyDataLinechart=true;
+          this.isEmptyDataHeatmap=true;
+          this.dataHeatMap = null;
+          this.dataLineChart = null;
+          this.range=[]
+          this.sort = this.selected;
+          this.dateCal = this.customFormatter(this.dateSelected);
+          let dataGot = await this.fetchData();
 
-      this.dataLineChart = dataGot.dataLine.data.listReport;
-      this.dataHeatMap = dataGot.dataHeatMap.data.listReport;
-      for (let x = 0; x < this.dataLineChart.total.length; x++) {
-        if (this.dataLineChart.total[x] !== 0) {
-          this.isEmptyDataLinechart = false;
-          break;
+          console.log('dateTo',this.dateSelectedTo)
+          if(this.dateSelectedTo)
+          {
+            for (let i= 0;i<this.dateSelectedTo.getDate()-this.dateSelected.getDate()+1;i++)
+            {
+              let month=this.dateSelected.getMonth()+1
+              let temp=this.dateSelected.getDate()+i+'-'+month+'-'+this.dateSelected.getFullYear()
+              this.range.push(temp)
+            }
+            console.log('range',this.range[this.range.length-1])
+          }
+
+          this.dataLineChart = dataGot.dataLine.data.listReport;
+          this.dataHeatMap = dataGot.dataHeatMap.data.listReport;
+          for (let x = 0; x < this.dataLineChart.total.length; x++) {
+            if (this.dataLineChart.total[x] !== 0) {
+              this.isEmptyDataLinechart = false;
+              break;
+            }
+          }
+          console.log("is empty data line chart", this.isEmptyDataLinechart);
+          console.log("dataLine", this.dataLineChart);
+          console.log("dataHeatMap", this.dataHeatMap);
         }
-      }
-      console.log("is empty data line chart", this.isEmptyDataLinechart);
-      console.log("dataLine", this.dataLineChart);
-      console.log("dataHeatMap", this.dataHeatMap);
+
+
+
     },
     customFormatter(date) {
       return moment(date).format("DD-MM-YYYY");

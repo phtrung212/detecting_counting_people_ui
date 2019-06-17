@@ -12,8 +12,16 @@
         :class="isActive"
         img-top
       >
-        <b-button v-if="multiCam==false" :href="'/reports/'+this.name" variant="primary">View report</b-button>
-        <b-button :disabled="isSelected" v-else href="/reports/multiCam" variant="primary">View report</b-button>
+        <div class="bodyCard">
+          <div class="info">
+            Last day processed:{{info.day}}<br/>
+            in:{{info.in}}<br/>
+            out:{{info.out}}<br/>
+          </div>
+          <b-button v-if="multiCam==false" :href="'/reports/'+this.name" variant="primary">View report</b-button>
+          <b-button :disabled="isSelected" v-else href="/reports/multiCam" variant="primary">View report</b-button>
+        </div>
+
       </b-card>
     </div>
   </div>
@@ -25,7 +33,7 @@
   const api = "https://datncountingapi.mybluemix.net/"
   export default {
     name: "Camera.vue",
-    props: ["name", "multiCam", "cameras"],
+    props: ["name", "multiCam", "cameras","info"],
     methods:{
       onClick (){
         alert('Ohhhhhhhhhh')
@@ -46,7 +54,7 @@
     computed: {
       isActive(){
         let selected = '';
-        console.log(this.cameras)
+        //console.log(this.cameras)
         if (this.cameras) {
           for (let i = 0; i < this.cameras.length; i++) {
             //console.log(cameras[i].toString())
@@ -55,12 +63,12 @@
             }
           }
         }
-        console.log(selected)
+        //console.log(selected)
         return selected
       },
       isSelected() {
         let selected = true;
-        console.log(this.cameras)
+        //console.log(this.cameras)
         if (this.cameras) {
           for (let i = 0; i < this.cameras.length; i++) {
             //console.log(cameras[i].toString())
@@ -69,7 +77,7 @@
             }
           }
         }
-        console.log(selected)
+        //console.log(selected)
         return selected
       }
     }
@@ -77,10 +85,12 @@
 </script>
 
 <style scoped>
-  .active {
-    border: 1px #1e88e5 solid;
+  .card-title {
+    text-align: center;
   }
-
+  #card{
+    display: flex;
+  }
   .camera-card {
     margin-bottom: 25px;
     cursor: pointer;
@@ -89,6 +99,15 @@
   .camera-card:hover {
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   }
-
-
+  .bodyCard{
+    display: flex;
+    flex-flow: column;
+  }
+  .info{
+    font-size: 15px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #47494e;
+  }
 </style>
