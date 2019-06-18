@@ -4,6 +4,9 @@
       <p>Realtime Counting</p>
       <hr>
     </div>
+    <div v-if="this.listRealtimeCam.length===0" class="no_cam">
+      <p>No realtime camera is activated now</p>
+    </div>
     <div class="row" :key="this.in_num+this.out+this.listRealtimeCam">
       <div class="col-4" v-for="(camera,index) in listRealtimeCam" :key="index">
         <Camera :name="camera" :in="in_num[index]" :out="out[index]"/>
@@ -65,12 +68,19 @@ import Camera from  '~/components/RealtimeCameraCard.vue'
     margin-top: 0;
     border-width: 2px;
   }
+  .no_cam
+  {
+    font-size: 20px;
+    font-weight: bold;
+    color: #343a40;
+  }
   .listCam{
     display: flex;
     justify-content: space-between;
   }
   .header
   {
+    font-size: 20px;
     margin-top: 20px;
     text-align: center;
     font-weight: bold;

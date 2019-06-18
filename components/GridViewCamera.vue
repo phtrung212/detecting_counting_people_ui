@@ -96,6 +96,9 @@
     flex-direction: column;
     width:100%;
   }
+  .sub-head p {
+    font-size: 20px;
+  }
   .head-tool{
     align-self: flex-end;
   }

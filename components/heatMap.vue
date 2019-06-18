@@ -1,7 +1,7 @@
 <template>
   <div id="echarts">
     <div id="heatMap">
-      <img v-if="isEmptyData == false" src="https://bitly.vn/1s50" />
+      <img v-if="isEmptyData == false" :src="urlImg" />
       <p v-if="isEmptyData === true">This day has not processed yet</p>
     </div>
   </div>
@@ -10,17 +10,18 @@
 import Slider from "@@/components/Slider.vue";
 import HeatMap from "heatmap.js";
 import Vue from "vue";
-
+const api = "https://datncountingapi.mybluemix.net/"
 export default {
   name: "Echarts",
-  props: ["dataH", "startHour", "endHour", "mode"],
+  props: ["dataH", "startHour", "endHour", "mode","url"],
   components: {
     Slider
   },
   data() {
     return {
       isEmptyData: true,
-      isAllValueZero: true
+      isAllValueZero: true,
+      urlImg:'',
     };
   },
   computed: {
@@ -29,7 +30,9 @@ export default {
       dataHeat(){return this.$store.state.heatData}*/
   },
   methods: {
-    heatmapjs(dataH, startHour, endHour, mode) {
+    heatmapjs(dataH, startHour, endHour, mode,url) {
+      this.urlImg=url
+      console.log('url',url)
       let endHourEdit;
       if (endHour == 0) endHourEdit = 24;
       else endHourEdit = endHour;
@@ -146,9 +149,10 @@ export default {
       heatmapInstance.setData(data);
     }
   },
-  mounted() {
+  async mounted() {
     console.log("mounted");
     this.$nextTick(function() {
+      console.log("this.url",this.url);
       //let data=null
       /*if(this.dataHeat==null)
         {
@@ -159,7 +163,7 @@ export default {
         {
           data=this.dataHeat()
         }*/
-      this.heatmapjs(this.dataH, this.startHour, this.endHour, this.mode);
+      this.heatmapjs(this.dataH, this.startHour, this.endHour, this.mode, this.url);
     });
   }
 };

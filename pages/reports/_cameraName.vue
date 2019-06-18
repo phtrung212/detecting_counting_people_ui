@@ -130,6 +130,7 @@
               :key="componentKey +sliderStartPoint+sliderEndPoint"
               :start-hour="sliderStartPoint"
               :end-hour="sliderEndPoint"
+              :url="this.urlImgHeatmap"
             />
           </b-tab>
 
@@ -239,6 +240,7 @@ import axios from "axios";
 import { mapActions, mapMutations } from "vuex";
 import firebase from "../../plugins/firebase";
 const api = "https://datncountingapi.mybluemix.net/api/";
+const apiImg = "https://datncountingapi.mybluemix.net/";
 const _api = "http://localhost:3001/api/";
 export default {
   name: "reports",
@@ -246,16 +248,25 @@ export default {
   components: { HeatMap, LineChart, Datepicker, Slider, Loading, CustomSlider },
   async asyncData(context) {
     console.log("cookie", context.app.$cookies.get("cameras"));
+
     let cameras = context.app.$cookies.get("cameras")
       ? context.app.$cookies.get("cameras")
       : context.params.cameraName;
+    let urlImgH=''
+    let res = await axios.get(`${apiImg}get-file?filename=${context.params.cameraName}.png`)
+    if (res.data.url)
+      urlImgH = res.data.url
+    else
+      urlImgH = '/no-img.jpg'
+    console.log('url2',urlImgH)
     let dateList = await axios.get(
       `${api}LineCharts/check-day-processed?cameras=${cameras}`
     );
     console.log('daylist',dateList)
     return {
       cameraName: context.params.cameraName,
-      days: dateList.data
+      days: dateList.data,
+      urlImgHeatmap:urlImgH
     };
   },
   data: function() {
@@ -410,6 +421,7 @@ export default {
         let cameraList = null;
         if (this.cameraSelected) cameraList = this.cameraSelected;
         else cameraList = this.cameraName;
+
         let [dataLine, dataHeatMap] = await Promise.all([
           axios.get(
             `${api}LineCharts/get-reports-day?day=${this.dateSelected.getDate()}&month=${this.dateSelected.getMonth() +
