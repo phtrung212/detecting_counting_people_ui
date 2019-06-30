@@ -241,6 +241,8 @@ import { mapActions, mapMutations } from "vuex";
 import firebase from "../../plugins/firebase";
 const api = "https://datncountingapi.mybluemix.net/api/";
 const apiImg = "https://datncountingapi.mybluemix.net/";
+const _apiImg = "http://localhost:3001/";
+
 const _api = "http://localhost:3001/api/";
 export default {
   name: "reports",

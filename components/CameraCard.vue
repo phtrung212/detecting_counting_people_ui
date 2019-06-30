@@ -31,6 +31,7 @@
   import axios from 'axios'
 
   const api = "https://datncountingapi.mybluemix.net/"
+  const _api = "http://localhost:3001/"
   export default {
     name: "Camera.vue",
     props: ["name", "multiCam", "cameras","info"],

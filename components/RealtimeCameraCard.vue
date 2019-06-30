@@ -4,6 +4,8 @@
       <b-card
         id="card"
         :title="name"
+        :img-src="url"
+        img-alt="Image"
         tag="article"
         style="max-width: 20rem;"
         img-top
@@ -16,11 +18,25 @@
 </template>
 
 <script>
+  import axios from 'axios'
+
   const api = "https://datncountingapi.mybluemix.net/"
+  const _api = "http://localhost:3001/"
   export default {
     name: "Camera.vue",
     props: ["name", "in", "out"],
-
+  data() {
+    return {
+      url: ''
+    }
+  },
+  async mounted() {
+    let res = await axios.get(`${api}get-file?filename=${this.name}.png`)
+    if (res.data.url)
+      this.url = res.data.url
+    else
+      this.url = '/no-img.jpg'
+  },
   };
 </script>
 
