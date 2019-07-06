@@ -12,10 +12,10 @@
       </div>
 
     </div>
-    <div class="bv-example-row">
+    <div >
       <b-form-group>
-        <b-form-checkbox-group id="checkbox-group-2" v-model="selected" name="flavour-2" @change="handleChange">
-          <div class="col-4" v-for="(camera,index) in cameraList" :key="camera.id">
+        <b-form-checkbox-group id="checkbox-group-2" class="row" v-model="selected" name="flavour-2" @change="handleChange">
+          <div class="col-4"  v-for="(camera,index) in cameraList" :key="camera.id">
             <b-form-checkbox v-if="mode==2" :value="camera.name"></b-form-checkbox>
             <Camera :name="camera.name" :multi-cam="multiCam" :cameras="selected" :info="inforCameras[index]"/>
 
@@ -73,10 +73,7 @@
 
 <style scoped>
   #checkbox-group-2 {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-content: space-around;
+
   }
 
   /*.cell:not(:nth-child(3n - 2)) {*/
