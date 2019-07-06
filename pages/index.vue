@@ -72,7 +72,6 @@ export default {
 <style>
 .container {
   min-height: 100vh;
-  display: flex;
   margin-top: 10px;
 }
 
