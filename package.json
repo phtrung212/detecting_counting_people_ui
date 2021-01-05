@@ -16,7 +16,7 @@
     "@syncfusion/ej2-vue-dropdowns": "^16.4.55",
     "@syncfusion/ej2-vue-inputs": "^16.4.55",
     "@syncfusion/ej2-vue-popups": "^16.4.54",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "bootstrap": "^4.1.3",
     "bootstrap-vue": "^2.0.0-rc.11",
     "chart.js": "^2.8.0",
